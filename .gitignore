@@ -1,1 +1,3 @@
 *.swp
+env-django/
+__pycache__/
