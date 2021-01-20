@@ -78,11 +78,11 @@ def generate_random_students(number):
 def is_free_time(teacher_proposal,student_slot):
     return student_slot["beginning"] >= teacher_proposal["beginning"] and student_slot["end"] <= teacher_proposal["end"]
 
-def is_free_student(teacher_proposal,student):
+"""def is_free_student(teacher_proposal,student):
     for student_slot in student["slots"]:
         if is_free_time(teacher_proposal,student_slot) and teacher_proposal["activity"] in student["likings"]:
             return True
-    return False
+    return False"""
 
 # fonctions auxiliaires pour + de lisibilité dans les tests
 
@@ -124,9 +124,39 @@ student_slot = {"beginning":student_beginning_time, "end":student_ending_time}
 teacher_proposal = {"activity":"tennis", "beginning":teacher_beginning_time, "end":teacher_ending_time}
 student=generate_student(2,"Pete",["golf"],[student_slot])
 
-print_teacher_list(generate_random_teachers(5))
+teacher_list = generate_random_teachers(5)
+student_list = generate_random_students(5)
 
-print(is_free_student(teacher_proposal,student))
+print("TEACHER LIST\n\n",teacher_list)
+
+print_teacher_list(teacher_list)
+print_student_list(student_list)
+
+def match(teachers,students):
+    match_list = []
+    for teacher in teachers:
+        for proposal in teacher["proposals"]:
+            if students != []:
+                for student in students:
+                    if proposal["activity"] in student["likings"]:
+                        for slot in student["slots"]:
+                            if is_free_time(proposal,slot):
+                                match_list.append((teacher["id"],proposal,student["id"],slot))
+                                student["slots"].remove(slot)
+    return match_list
+
+matches = match(teacher_list,student_list)
+
+def print_match_list(match_list):
+    for match in match_list:
+        print(str(match)+"\n")
+
+print_match_list(matches)
+
+
+
+
+# print(is_free_student(teacher_proposal,student))
 
 
 # def match_teachers_students(teacher_list,student_list):
