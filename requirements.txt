@@ -3,3 +3,4 @@ Django==3.1.5
 pytz==2020.5
 sqlparse==0.4.1
 dj-database-url==0.5.0
+dj-static==0.0.6
