@@ -1,0 +1,142 @@
+@charset "utf-8";
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,800,700,600,300");
+@import url("animate.css");
+
+#forkMe {
+    top: 3em;
+    right: -6em;
+    color: #fff;
+    display: block;
+    position: fixed;
+    text-align: center;
+    text-decoration: none;
+    letter-spacing: .06em;
+    background-color: #A00;
+    padding: 0.5em 5em 0.4em 5em;
+    text-shadow: 0 0 0.75em #444;
+    box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
+    transform: rotate(45deg) scale(0.75,1);
+    font: bold 16px/1.2em Arial, Sans-Serif;
+    -webkit-text-shadow: 0 0 0.75em #444;
+    -webkit-box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
+    -webkit-transform: rotate(45deg) scale(0.75,1);
+    z-index:10;
+}
+#forkMe:before {
+    content: '';
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    margin: -0.3em -5em;
+    transform: scale(0.7);
+    -webkit-transform: scale(0.7);
+    border: 2px rgba(255,255,255,0.7) dashed;
+}
+#forkMe:hover {opacity: 0.9;}
+
+
+.nm {
+  margin: 0 !important;
+}
+
+body {
+  /* font-family: "Open Sans", sans-serif; */
+  color: #383e44;
+  font-weight: 400;
+  font-size: 62.5%;
+  padding: 0;
+  color: #555555;
+}
+
+h3 {
+  color: #383e44;
+  font-weight: 300;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+p {
+  line-height: 21px;
+}
+
+header {
+  background: #0577d3;
+  border-bottom: 5px solid #d2d3d5;
+  overflow: hidden;
+}
+
+.div-main {
+  opacity: 1;
+  margin: 0 auto;
+  position: relative;
+  max-width: 1600px;
+}
+
+.person-jumping {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url("../img/jumping.png") no-repeat 0 0 #0577d3;
+}
+
+.iconxd {
+  position: absolute;
+}
+
+.iconxd.first {
+  left: 177px;
+  top: 114px;
+}
+
+.iconxd.second {
+  left: 398px;
+  top: 340px;
+}
+
+.iconxd.third {
+  left: 1275px;
+  top: 432px;
+}
+
+.iconxd.last {
+  left: 1075px;
+  top: 98px;
+}
+
+.main-box {
+  color: white;
+  margin: 7% auto !important;
+  float: none !important;
+  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+  max-width: 502px;
+  -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+}
+
+.main-box h3 {
+  padding-top:10vh;
+  color: white;
+  font-size: 3em;
+  height: auto;
+  line-height: 2.2em;
+  padding: 0 5%;
+}
+
+.main-box .cont {
+  background: rgba(5, 26, 46, 0.8);
+  padding: 3% 5%;
+}
+
+.main-box .cont p {
+  font-size: 1.5em;
+  padding: 0 0 2%;
+}
