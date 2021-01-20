@@ -24,9 +24,9 @@
     <div class="div-main">
       <div class="animated fadeIn"></div>
       <img class="iconxd first animated delay1 bounceInDown" src="{% static 'students/img/piano.png' %}" width="80px" height="80px" />
-      <img class="iconxd second animated delay2 bounceInDown" src="{% static 'students/img/piano.png' %}"  width="80px" height="80px" />
-      <img class="iconxd third animated delay3 bounceInDown"  src="{% static 'students/img/piano.png' %}" width="80px" height="80px" />
-      <img class="iconxd last animated delay4 bounceInDown" src="{% static 'students/img/piano.png' %}" width="80px" height="80px" />
+      <img class="iconxd second animated delay2 bounceInDown" src="{% static 'students/img/brush.png' %}"  width="80px" height="80px" />
+      <img class="iconxd third animated delay3 bounceInDown"  src="{% static 'students/img/dance.png' %}" width="80px" height="80px" />
+      <img class="iconxd last animated delay4 bounceInDown" src="{% static 'students/img/microphone.png' %}" width="80px" height="80px" />
       <div class="container">
         <div class="row-fluid">
           <div class="span7 main-box animated delay5 flipInX">
@@ -35,8 +35,10 @@
             </h3>
             <div class="cont">
               {% if user.is_authenticated %}
-                <p>Welcome, {{ user.username }} !</p>
- 
+                <div class="text-center">
+                  <p>Welcome, {{ user.username }} !</p><br>
+                  <a href="/students/" class="btn btn-light" > Keep going ! </a>
+                </div>
               {% else %}
               <p class="text-center">
                 Wasting<strong> your time</strong>?
@@ -49,7 +51,7 @@
                   <div class="col-md-12"> <a class="btn btn-light btn-google btn-block text-uppercase btn-outline" href="{% provider_login_url 'google' %}"><img src="https://img.icons8.com/color/16/000000/google-logo.png"> Signup Using Google</a> </div>
                 </div>
               </div> <br>
-              <p class="text-inverse text-center">Already have an account? <a href="#" data-abc="true">Login</a></p>
+              <p class="text-inverse text-center">Already have an account? <a href="/admin/" data-abc="true">Login</a></p>
               {% endif %}
             </div>
           </div>
