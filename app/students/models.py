@@ -12,6 +12,14 @@ class FreeTime(models.Model):
             self.start, self.end, self.student
         )
 
+    @property
+    def get_start(self):
+        return self.start.strftime("%m/%d/%Y %H:%M %p")
+
+    @property
+    def get_end(self):
+        return self.end.strftime("%m/%d/%Y %H:%M %p")
+
 
 class Hobbie(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)

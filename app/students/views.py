@@ -14,8 +14,10 @@ def landing(request):
 def index(request):
     context = {}
     hobbies_user = Hobbie.objects.filter(student=request.user)
+    free_times = FreeTime.objects.filter(student=request.user)
     hobbies = ", ".join([h.name for h in hobbies_user])
     context["hobbies"] = hobbies
+    context["free_times"] = free_times
     return render(request, "students/calendar.html", context)
 
 
@@ -36,14 +38,12 @@ def load_calendar(request):
 
 
 def save_event(request):
-    title = request.GET.get("title", None)
     start = request.GET.get("start", None)
     end = request.GET.get("end", None)
     start_obj = datetime.datetime.strptime(start, '%m/%d/%Y %H:%M %p')
     end_obj = datetime.datetime.strptime(end, '%m/%d/%Y %H:%M %p')
     obj = FreeTime(student=request.user, start=start_obj, end=end_obj)
     obj.save()
-    print(title, start, end)  # current user
     return JsonResponse({"ok": "true"}, status=200)
 
 

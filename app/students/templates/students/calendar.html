@@ -147,6 +147,7 @@
   <div class="container">
 
     <h3 class="border-bottom-0 mt-3"> 1. Tell us your hobbies </h3>
+
     <form action="save_hobbies" class="mb-3" method="POST">
       {% csrf_token %}
       <div class="form-group">
@@ -214,6 +215,18 @@
             center: "title",
             right: "month,agendaWeek,agendaDay"
           },
+
+          events: [
+        {% if free_times %}
+            {% for t in free_times %}
+            {
+              title: "Free time",
+              start: "{{t.get_start}}",
+              end: "{{t.get_end}}"
+            },
+            {% endfor %}
+        {% endif %}
+          ],
 
 
           defaultView: "month",
