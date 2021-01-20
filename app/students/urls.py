@@ -9,4 +9,5 @@ urlpatterns = [
     path("load_calendar", views.load_calendar, name="load"),
     path("save_hobbies", views.save_hobbies, name="save_hobbies"),
     path("generate_calendar", views.generate_plan, name="generate_calendar"),
+    path("save_event", views.save_event, name="save_event"),
 ]

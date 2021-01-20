@@ -7,6 +7,7 @@
   @xdanielsb
 -->
 <head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://fullcalendar.io/js/fullcalendar-3.0.1/fullcalendar.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.42/css/bootstrap-datetimepicker.min.css">
@@ -89,7 +90,7 @@
       background-color: #ddd;
     }
 
-    .dropdown:hover .dropdown-content {
+    .dropdown:hover .dropdown-content 
       display: block;
     }
 
@@ -177,7 +178,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4><input class="modal-title" type="text" name="title" id="title" placeholder="Event Title/Description" /></h4>
+            <h4><input class="modal-title" type="text" name="title" id="title" placeholder="Free Time" disabled/></h4>
           </div>
           <div class="modal-body">
             <div class="row">
@@ -273,13 +274,26 @@
 
         //click to save "save"
         $("#save-event").on("click", function(event) {
-          var title = $("#title").val();
+          var title = "Free time";
           if (title) {
             var eventData = {
-              title: title,
+              title: "Free time",
               start: $("#starts-at").val(),
               end: $("#ends-at").val()
             };
+
+            $.ajax({
+              type: 'GET',
+              url: "{% url 'students:save_event' %}",
+              data: eventData,
+              success: function (response) {
+                  console.log(response);
+              },
+              error: function (response) {
+                  console.log(response);
+              }
+           })
+
 
             $("#calendar").fullCalendar("renderEvent", eventData, true); // stick? = true
           }
