@@ -26,7 +26,13 @@ SECRET_KEY = '0s54za47(^4e70)t@3q+ro0=cpgbt=8im*y!jli^tite=x9$xu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+env_allowed_hosts = []
+try:
+  env_allowed_hosts = os.environ["ALLOWED_HOSTS"].split(",")
+except KeyError:
+  pass
+
+ALLOWED_HOSTS = ["localhost"] + env_allowed_hosts
 
 
 # Application definition
