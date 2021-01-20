@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load socialaccount %}
 <html lang="en" class="cye-disabled cye-nm">
 <!--
   So, you are curious about my code, mh?
@@ -33,6 +34,10 @@
               Schedme
             </h3>
             <div class="cont">
+              {% if user.is_authenticated %}
+                <p>Welcome, {{ user.username }} !</p>
+ 
+              {% else %}
               <p class="text-center">
                 Wasting<strong> your time</strong>?
                 Reconnect with you.
@@ -41,10 +46,11 @@
               </p>
               <div class="row">
                 <div class="text-center">
-                  <div class="col-md-12"> <a class="btn btn-light btn-google btn-block text-uppercase btn-outline" href="#"><img src="https://img.icons8.com/color/16/000000/google-logo.png"> Signup Using Google</a> </div>
+                  <div class="col-md-12"> <a class="btn btn-light btn-google btn-block text-uppercase btn-outline" href="{% provider_login_url 'google' %}"><img src="https://img.icons8.com/color/16/000000/google-logo.png"> Signup Using Google</a> </div>
                 </div>
               </div> <br>
               <p class="text-inverse text-center">Already have an account? <a href="#" data-abc="true">Login</a></p>
+              {% endif %}
             </div>
           </div>
         </div>

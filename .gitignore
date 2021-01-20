@@ -1,3 +1,7 @@
 *.swp
 env-django/
 __pycache__/
+.vscode
+env/
+local
+code_secret_client*
