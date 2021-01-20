@@ -3,4 +3,5 @@ env-django/
 __pycache__/
 .vscode/
 env/
-code_secret_client_*
+code_secret_client*
+local/
