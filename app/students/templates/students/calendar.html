@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://fullcalendar.io/js/fullcalendar-3.0.1/fullcalendar.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.42/css/bootstrap-datetimepicker.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      margin: 40px 10px;
+      padding: 0;
+      font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+      font-size: 14px;
+    }
+
+    #calendar {
+      width: 900px;
+      margin: 0 auto;
+    }
+
+    #wrap {
+      width: 1100px;
+      margin: 0 auto;
+    }
+
+    .closeon {
+      border-radius: 5px;
+    }
+
+    input {
+      width: 50%;
+    }
+
+    input[type="text"][readonly] {
+      border: 2px solid rgba(0, 0, 0, 0);
+    }
+
+    /*info btn*/
+    .dropbtn {
+      /*background-color: #4CAF50;*/
+      background-color: #eee;
+      margin: 10px;
+      padding: 8px 16px 8px 16px;
+      font-size: 16px;
+      border: none;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 200px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      margin-left: 100px;
+      margin-top: -300px;
+    }
+
+    .dropdown-content p {
+      color: black;
+      padding: 4px 4px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #ddd;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+      background-color: grey;
+    }
+
+    .dropdown:hover .dropbtn span {
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='calendar'></div>
+
+  <div class="dropdown">
+    <div class="dropdown-content">
+      <p>Click a calendar date to invoke a Bootstrap Modal Box.</p>
+      <p>Add event title/description, start date, and end date.</p>
+      <p>Click "Save" to save event.</p>
+      <p>Click event again to re-open in Bootstrap Modal Box (Event is non-editable).
+      <p>
+      <p>Click "x" to delete event.</p>
+    </div>
+    <button class="fa dropbtn" style="font-size:24px; margin-left: 75%; color: black"><span>&#xf128;</span></button>
+  </div>
+
+  <div id='datepicker'></div>
+
+  <div class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4><input class="modal-title" type="text" name="title" id="title" placeholder="Event Title/Description" /></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12">
+              <label class="col-xs-4" for="starts-at">Starts at</label>
+              <input type="text" name="starts_at" id="starts-at" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <label class="col-xs-4" for="ends-at">Ends at</label>
+              <input type="text" name="ends_at" id="ends-at" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="save-event">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment-with-locales.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.42/js/bootstrap-datetimepicker.min.js"></script>
+  <script id="rendered-js">
+    $(document).ready(function() {
+      $("#calendar").fullCalendar({
+        header: {
+          left: "prev,next today",
+          center: "title",
+          right: "month,agendaWeek,agendaDay"
+        },
+
+
+        defaultView: "month",
+        navLinks: true, // can click day/week names to navigate views
+        selectable: true,
+        selectHelper: true,
+        editable: true,
+        eventLimit: true, // allow "more" link when too many events
+
+        select: function(start, end) {
+          // Display the modal.
+          // You could fill in the start and end fields based on the parameters
+          $(".modal").modal("show");
+          $(".modal").
+          find("#title").
+          val("");
+          $(".modal").
+          find("#starts-at").
+          val("");
+          $(".modal").
+          find("#ends-at").
+          val("");
+          $("#save-event").show();
+          $("input").prop("readonly", false);
+        },
+
+        eventRender: function(event, element) {
+          //dynamically prepend close button to event
+          element.
+          find(".fc-content").
+          prepend("<span class='closeon material-icons'>&#xe5cd;</span>");
+          element.find(".closeon").on("click", function() {
+            $("#calendar").fullCalendar("removeEvents", event._id);
+          });
+        },
+
+        eventClick: function(calEvent, jsEvent) {
+          // Display the modal and set event values.
+          $(".modal").modal("show");
+          $(".modal").
+          find("#title").
+          val(calEvent.title);
+          $(".modal").
+          find("#starts-at").
+          val(calEvent.start);
+          $(".modal").
+          find("#ends-at").
+          val(calEvent.end);
+          $("#save-event").hide();
+          $("input").prop("readonly", true);
+        }
+      });
+
+
+      // Bind the dates to datetimepicker.
+      $("#starts-at, #ends-at").datetimepicker();
+
+      //click to save "save"
+      $("#save-event").on("click", function(event) {
+        var title = $("#title").val();
+        if (title) {
+          var eventData = {
+            title: title,
+            start: $("#starts-at").val(),
+            end: $("#ends-at").val()
+          };
+
+          $("#calendar").fullCalendar("renderEvent", eventData, true); // stick? = true
+        }
+        $("#calendar").fullCalendar("unselect");
+
+        // Clear modal inputs
+        $(".modal").
+        find("input").
+        val("");
+        // hide modal
+        $(".modal").modal("hide");
+      });
+
+      // $("textarea").autosize();
+    });
+  </script>
+</body>
