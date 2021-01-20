@@ -131,139 +131,156 @@
   </nav>
 
   <div class="container">
-  <h3 class="border-bottom-0"> 1. Choose your disponibility </h3> 
-  <h4 class="border-bottom-0"> <i> (you can load your google calendar <a class ="btn btn-info" > load calendar </a>)</i></h4> 
-  <div id='calendar'></div>
 
-  <h3 class="border-bottom-0 mt-3"> 2. Generate your plan <a class="btn btn-primary  btn-lg"> Click </a> </h3>
+    <h3 class="border-bottom-0 mt-3"> 1. Tell us your hobbies </h3>
+    <form action="save_hobbies" class="mb-3" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Write your hobbies</label>
+        <textarea name="hobbies" class="form-control" id="exampleFormControlTextarea1" rows="5" placeholder="piano, dancing, eat, talk"></textarea>
+      </div>
+      <input type="submit" value="save" style="width:60px">
+    </form>
 
-  
-  <div class="mb-3"></div>
 
-  <div id='datepicker'></div>
+    <h3 class="border-bottom-0"> 2. Choose your disponibility </h3>
+    <h4 class="border-bottom-0"> <i> (you can load your google calendar <a class="btn btn-info" href="load_calendar"> load calendar </a>)</i></h4>
+    <div id='calendar'></div>
 
-  <div class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4><input class="modal-title" type="text" name="title" id="title" placeholder="Event Title/Description" /></h4>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-xs-12">
-              <label class="col-xs-4" for="starts-at">Starts at</label>
-              <input type="text" name="starts_at" id="starts-at" />
+
+
+
+    <h3 class="border-bottom-0 mt-3"> 3. Generate your plan <a class="btn btn-primary  btn-lg" href="generate_calendar"> Click </a> </h3>
+
+    <h3 class="border-bottom-0 mt-3"> 4. Join the class </h3>
+
+
+    <div class="mb-3"></div>
+
+    <div id='datepicker'></div>
+
+    <div class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4><input class="modal-title" type="text" name="title" id="title" placeholder="Event Title/Description" /></h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-xs-12">
+                <label class="col-xs-4" for="starts-at">Starts at</label>
+                <input type="text" name="starts_at" id="starts-at" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <label class="col-xs-4" for="ends-at">Ends at</label>
+                <input type="text" name="ends_at" id="ends-at" />
+              </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-xs-12">
-              <label class="col-xs-4" for="ends-at">Ends at</label>
-              <input type="text" name="ends_at" id="ends-at" />
-            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="save-event">Save</button>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="save-event">Save</button>
         </div>
       </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.42/js/bootstrap-datetimepicker.min.js"></script>
+    <script id="rendered-js">
+      $(document).ready(function() {
+        $("#calendar").fullCalendar({
+          header: {
+            left: "prev,next today",
+            center: "title",
+            right: "month,agendaWeek,agendaDay"
+          },
+
+
+          defaultView: "month",
+          navLinks: true, // can click day/week names to navigate views
+          selectable: true,
+          selectHelper: true,
+          editable: true,
+          eventLimit: true, // allow "more" link when too many events
+
+          select: function(start, end) {
+            // Display the modal.
+            // You could fill in the start and end fields based on the parameters
+            $(".modal").modal("show");
+            $(".modal").
+            find("#title").
+            val("");
+            $(".modal").
+            find("#starts-at").
+            val("");
+            $(".modal").
+            find("#ends-at").
+            val("");
+            $("#save-event").show();
+            $("input").prop("readonly", false);
+          },
+
+          eventRender: function(event, element) {
+            //dynamically prepend close button to event
+            element.
+            find(".fc-content").
+            prepend("<span class='closeon material-icons'>&#xe5cd;</span>");
+            element.find(".closeon").on("click", function() {
+              $("#calendar").fullCalendar("removeEvents", event._id);
+            });
+          },
+
+          eventClick: function(calEvent, jsEvent) {
+            // Display the modal and set event values.
+            $(".modal").modal("show");
+            $(".modal").
+            find("#title").
+            val(calEvent.title);
+            $(".modal").
+            find("#starts-at").
+            val(calEvent.start);
+            $(".modal").
+            find("#ends-at").
+            val(calEvent.end);
+            $("#save-event").hide();
+            $("input").prop("readonly", true);
+          }
+        });
+
+
+        // Bind the dates to datetimepicker.
+        $("#starts-at, #ends-at").datetimepicker();
+
+        //click to save "save"
+        $("#save-event").on("click", function(event) {
+          var title = $("#title").val();
+          if (title) {
+            var eventData = {
+              title: title,
+              start: $("#starts-at").val(),
+              end: $("#ends-at").val()
+            };
+
+            $("#calendar").fullCalendar("renderEvent", eventData, true); // stick? = true
+          }
+          $("#calendar").fullCalendar("unselect");
+
+          // Clear modal inputs
+          $(".modal").
+          find("input").
+          val("");
+          // hide modal
+          $(".modal").modal("hide");
+        });
+
+        // $("textarea").autosize();
+      });
+    </script>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment-with-locales.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.42/js/bootstrap-datetimepicker.min.js"></script>
-  <script id="rendered-js">
-    $(document).ready(function() {
-      $("#calendar").fullCalendar({
-        header: {
-          left: "prev,next today",
-          center: "title",
-          right: "month,agendaWeek,agendaDay"
-        },
-
-
-        defaultView: "month",
-        navLinks: true, // can click day/week names to navigate views
-        selectable: true,
-        selectHelper: true,
-        editable: true,
-        eventLimit: true, // allow "more" link when too many events
-
-        select: function(start, end) {
-          // Display the modal.
-          // You could fill in the start and end fields based on the parameters
-          $(".modal").modal("show");
-          $(".modal").
-          find("#title").
-          val("");
-          $(".modal").
-          find("#starts-at").
-          val("");
-          $(".modal").
-          find("#ends-at").
-          val("");
-          $("#save-event").show();
-          $("input").prop("readonly", false);
-        },
-
-        eventRender: function(event, element) {
-          //dynamically prepend close button to event
-          element.
-          find(".fc-content").
-          prepend("<span class='closeon material-icons'>&#xe5cd;</span>");
-          element.find(".closeon").on("click", function() {
-            $("#calendar").fullCalendar("removeEvents", event._id);
-          });
-        },
-
-        eventClick: function(calEvent, jsEvent) {
-          // Display the modal and set event values.
-          $(".modal").modal("show");
-          $(".modal").
-          find("#title").
-          val(calEvent.title);
-          $(".modal").
-          find("#starts-at").
-          val(calEvent.start);
-          $(".modal").
-          find("#ends-at").
-          val(calEvent.end);
-          $("#save-event").hide();
-          $("input").prop("readonly", true);
-        }
-      });
-
-
-      // Bind the dates to datetimepicker.
-      $("#starts-at, #ends-at").datetimepicker();
-
-      //click to save "save"
-      $("#save-event").on("click", function(event) {
-        var title = $("#title").val();
-        if (title) {
-          var eventData = {
-            title: title,
-            start: $("#starts-at").val(),
-            end: $("#ends-at").val()
-          };
-
-          $("#calendar").fullCalendar("renderEvent", eventData, true); // stick? = true
-        }
-        $("#calendar").fullCalendar("unselect");
-
-        // Clear modal inputs
-        $(".modal").
-        find("input").
-        val("");
-        // hide modal
-        $(".modal").modal("hide");
-      });
-
-      // $("textarea").autosize();
-    });
-  </script>
-</div>
 </body>
