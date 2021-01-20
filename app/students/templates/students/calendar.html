@@ -137,7 +137,7 @@
       {% csrf_token %}
       <div class="form-group">
         <label for="exampleFormControlTextarea1">Write your hobbies</label>
-        <textarea name="hobbies" class="form-control" id="exampleFormControlTextarea1" rows="5" placeholder="piano, dancing, eat, talk"></textarea>
+        <textarea name="hobbies" class="form-control" id="exampleFormControlTextarea1" rows="5" placeholder="piano, dancing, eat, talk">{% if hobbies %}{{hobbies}}{% endif %}</textarea>
       </div>
       <input type="submit" value="save" style="width:60px">
     </form>
@@ -238,6 +238,8 @@
 
           eventClick: function(calEvent, jsEvent) {
             // Display the modal and set event values.
+
+            console.log("test");
             $(".modal").modal("show");
             $(".modal").
             find("#title").
