@@ -130,19 +130,24 @@ student_list = generate_random_students(5)
 print("TEACHER LIST\n\n",teacher_list)
 
 print_teacher_list(teacher_list)
+
+print("STUDENT LIST\n\n")
+
 print_student_list(student_list)
 
 def match(teachers,students):
     match_list = []
     for teacher in teachers:
         for proposal in teacher["proposals"]:
+            already_attributed=False
             if students != []:
                 for student in students:
-                    if proposal["activity"] in student["likings"]:
+                    if proposal["activity"] in student["likings"] and not already_attributed:
                         for slot in student["slots"]:
                             if is_free_time(proposal,slot):
                                 match_list.append((teacher["id"],proposal,student["id"],slot))
                                 student["slots"].remove(slot)
+                                already_attributed=True
     return match_list
 
 matches = match(teacher_list,student_list)
