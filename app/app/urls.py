@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from students.views import landing
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
-    path("", landing, name="landing"),
+    path('', TemplateView.as_view(template_name="social_app/landing.html")),
     path("students/", include("students.urls", namespace="students")),
     path("admin/", admin.site.urls),
+    path("accounts/", include("allauth.urls")),
 ]
