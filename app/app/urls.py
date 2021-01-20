@@ -24,3 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
 ]
+
+admin.site.site_header = "Schedme"
+admin.site.site_title = "Schedme"
+admin.site.index_title = "Schedme"
