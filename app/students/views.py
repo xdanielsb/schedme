@@ -19,11 +19,10 @@ def index(request):
 
 def save_hobbies(request):
     hobbies = request.POST.get("hobbies")
-    hobbies_user = [h.name for h in Hobbie.objects.filter(student=request.user)]
+    Hobbie.objects.filter(student=request.user).delete()
     for _hobbie in [x.strip().lower() for x in hobbies.split(",")]:
         hob = Hobbie(student=request.user, name=_hobbie)
-        if _hobbie not in hobbies_user:
-            hob.save()
+        hob.save()
     return redirect("students:index")
 
 

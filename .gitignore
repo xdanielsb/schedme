@@ -2,3 +2,4 @@
 env-django/
 __pycache__/
 .env
+.env.swo
