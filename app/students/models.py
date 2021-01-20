@@ -14,9 +14,9 @@ class Student(models.Model):
         """
         Obtain the user token from the database, generating it if it does not exist
         """
-        if (self.token is None):
-            self.token = calendar.refresh_creds(self.token)
-            self.save()
+        # TODO : store credentials as Text, here they are objects
+        self.token = calendar.refresh_creds(self.token)
+        self.save()
         return self.token
 
 

@@ -4,7 +4,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
-# If modifying these scopes, delete the file token.pickle.
+# If modifying these scopes, reset the token
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 
 def refresh_creds(creds):
