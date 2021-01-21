@@ -45,8 +45,8 @@ class CalendarCredentials(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     credentials = models.BinaryField()
 
-    def __str__(self) -> str:
-        return self.student
+    def __str__(self):
+        return "{}".format(self.student)
 
 class Hobbie(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
