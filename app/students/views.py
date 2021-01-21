@@ -1,7 +1,7 @@
 import datetime
 from django.shortcuts import render, redirect
 from teachers.models import Teacher
-from students.models import Hobbie, FreeTime, CalendarCredentials
+from students.models import Hobbie, FreeTime, CalendarCredentials, Activity
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from common.calendar import get_creds,get_events, filter_creds
@@ -35,14 +35,20 @@ def load_calendar(request):
     context = {}
     # here call method load calendar
     # print(request.user)  # current user
+    # obtain calendar token
     creds = CalendarCredentials.objects.filter(student=request.user)
     creds = pickle.loads(creds[0].credentials) if creds else None
     creds = filter_creds(creds)
     CalendarCredentials.objects.update_or_create(student=request.user,defaults={'credentials': pickle.dumps(creds)})
+    # obtain google calendar data and store it in our database
     events = get_events(creds)
-    print(events)
+    for event in events:
+        CalendarCredentials.objects.update_or_create(student=request.user,google_id=event['id'],defaults={
+            'start': event['start'],
+            'end': event['end'],
+            'isLocal': False
+        })
     return render(request, "students/calendar.html", context)
-
 
 def save_event(request):
     start = request.GET.get("start", None)
