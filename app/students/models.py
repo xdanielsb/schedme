@@ -25,7 +25,7 @@ class Activity(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
     isLocal = models.BooleanField(default=True) # true when the activity is scheduled by our software
-    google_id = models.IntegerField(null=True)
+    google_id = models.TextField(null=True)
     title = models.TextField(null=True)
 
     def __str__(self):

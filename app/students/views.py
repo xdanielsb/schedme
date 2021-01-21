@@ -43,7 +43,11 @@ def load_calendar(request):
     # obtain google calendar data and store it in our database
     events = get_events(creds)
     for event in events:
-        CalendarCredentials.objects.update_or_create(student=request.user,google_id=event['id'],defaults={'start': event['start'],'end': event['end'],'isLocal': False,'title': event['title'] if event['title'] else None})
+        if 'title' in event.keys():
+            default_value = {'start': event['start']['dateTime'],'end': event['end']['dateTime'],'isLocal': False,'title': event['title']}
+        else:
+            default_value = {'start': event['start']['dateTime'],'end': event['end']['dateTime'],'isLocal': False}
+        Activity.objects.update_or_create(student=request.user,google_id=event['id'],defaults=default_value)
     return render(request, "students/calendar.html", context)
 
 def save_event(request):
