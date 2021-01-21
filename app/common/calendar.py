@@ -7,14 +7,19 @@ from google.auth.transport.requests import Request
 # If modifying these scopes, reset the token
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 
-def refresh_creds(creds):
-    if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-    else:
-        # TODO change that with server data
-        flow = InstalledAppFlow.from_client_secrets_file(
-            'code_secret_client.json', SCOPES)
-        creds = flow.run_local_server(port=8080)
+def getCreds():
+    # TODO change that with server data
+    flow = InstalledAppFlow.from_client_secrets_file(
+        'code_secret_client.json', SCOPES)
+    creds = flow.run_local_server(port=8080)
+    return creds
+
+def filter_creds(creds):
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+        else:
+            creds = getCreds()
     return creds
 
 def add_event(creds,begin,end):

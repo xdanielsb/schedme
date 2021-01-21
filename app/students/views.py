@@ -4,7 +4,7 @@ from teachers.models import Teacher
 from students.models import Hobbie, FreeTime
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-
+from common.calendar import getCreds, get_events
 
 def landing(request):
     context = {}
@@ -34,6 +34,10 @@ def load_calendar(request):
     context = {}
     # here call method load calendar
     # print(request.user)  # current user
+    # TODO use creds from current user if authenticated
+    creds = getCreds()
+    events = get_events(creds)
+    print(events)
     return render(request, "students/calendar.html", context)
 
 
@@ -45,7 +49,6 @@ def save_event(request):
     obj = FreeTime(student=request.user, start=start_obj, end=end_obj)
     obj.save()
     return JsonResponse({"ok": "true"}, status=200)
-
 
 def generate_plan(request):
     context = {}
