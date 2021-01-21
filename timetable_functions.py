@@ -76,7 +76,7 @@ def generate_random_students(number):
     for proposal in teacher["proposals"]:"""
 
 def is_free_time(teacher_proposal,student_slot):
-    return student_slot["beginning"] >= teacher_proposal["beginning"] and student_slot["end"] <= teacher_proposal["end"]
+    return student_slot["beginning"] <= teacher_proposal["beginning"] and student_slot["end"] >= teacher_proposal["end"]
 
 """def is_free_student(teacher_proposal,student):
     for student_slot in student["slots"]:
