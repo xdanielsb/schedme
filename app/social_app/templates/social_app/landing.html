@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load socialaccount %}
 <html lang="en" class="cye-disabled cye-nm">
 <!--
   So, you are curious about my code, mh?
@@ -23,28 +24,36 @@
     <div class="div-main">
       <div class="animated fadeIn"></div>
       <img class="iconxd first animated delay1 bounceInDown" src="{% static 'students/img/piano.png' %}" width="80px" height="80px" />
-      <img class="iconxd second animated delay2 bounceInDown" src="{% static 'students/img/piano.png' %}"  width="80px" height="80px" />
-      <img class="iconxd third animated delay3 bounceInDown"  src="{% static 'students/img/piano.png' %}" width="80px" height="80px" />
-      <img class="iconxd last animated delay4 bounceInDown" src="{% static 'students/img/piano.png' %}" width="80px" height="80px" />
-      <div class="container">
+      <img class="iconxd second animated delay2 bounceInDown" src="{% static 'students/img/brush.png' %}"  width="80px" height="80px" />
+      <img class="iconxd third animated delay3 bounceInDown"  src="{% static 'students/img/dance.png' %}" width="80px" height="80px" />
+      <img class="iconxd last animated delay4 bounceInDown" src="{% static 'students/img/microphone.png' %}" width="80px" height="80px" />
+      <div class="container" style="padding-top:5em">
         <div class="row-fluid">
           <div class="span7 main-box animated delay5 flipInX">
             <h3 class="nm text-center">
               Schedme
             </h3>
             <div class="cont">
-              <p class="text-center">
-                Wasting<strong> your time</strong>?
-                Reconnect with you.
-                Tell us your hobbies and your free time and we
-                make a plan, specially made for you.
+              {% if user.is_authenticated %}
+                <div class="text-center">
+                  <p>Welcome, {{ user.username }} !</p><br>
+                  <a href="/students/" class="btn btn-light" > Keep going ! </a>
+                </div>
+              {% else %}
+              <p class="text-center h4">
+              Wasting<strong> your time</strong>?
+              </p>
+              <p class="text-center blockquote">
+              Make the most of your time!<br>
+              Tell us your hobbies and availability and we will create a plan, specially made for you.
               </p>
               <div class="row">
-                <div class="text-center">
-                  <div class="col-md-12"> <a class="btn btn-light btn-google btn-block text-uppercase btn-outline" href="#"><img src="https://img.icons8.com/color/16/000000/google-logo.png"> Signup Using Google</a> </div>
+                <div class="text-center pb-3">
+                  <div class="col-md-12"> <a class="btn btn-light btn-google btn-block btn-outline" href="{% provider_login_url 'google' %}"><img src="https://img.icons8.com/color/16/000000/google-logo.png"> Hope in !</a> </div>
                 </div>
               </div> <br>
-              <p class="text-inverse text-center">Already have an account? <a href="#" data-abc="true">Login</a></p>
+              <p class="text-inverse text-center h6">Already have an account? <a href="/admin/" data-abc="true">Login</a></p>
+              {% endif %}
             </div>
           </div>
         </div>
