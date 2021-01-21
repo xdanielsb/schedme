@@ -36,7 +36,6 @@ def save_hobbies(request):
 
 
 def load_calendar(request):
-    context = {}
     # here call method load calendar
     # print(request.user)  # current user
     # obtain calendar token
@@ -48,21 +47,14 @@ def load_calendar(request):
     )
     # obtain google calendar data and store it in our database
     events = get_events(creds)
-    print(events)
     for event in events:
+        default_value = {
+            "start": event["start"]["dateTime"],
+            "end": event["end"]["dateTime"],
+            "isLocal": False,
+        }
         if "title" in event.keys():
-            default_value = {
-                "start": event["start"]["dateTime"],
-                "end": event["end"]["dateTime"],
-                "isLocal": False,
-                "title": event["title"],
-            }
-        else:
-            default_value = {
-                "start": event["start"]["dateTime"],
-                "end": event["end"]["dateTime"],
-                "isLocal": False,
-            }
+            default_value["title"] = event["title"]
         Activity.objects.update_or_create(
             student=request.user, google_id=event["id"], defaults=default_value
         )
