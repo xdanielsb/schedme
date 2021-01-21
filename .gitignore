@@ -5,3 +5,5 @@ __pycache__/
 env/
 local
 code_secret_client*
+.env
+.env.swo

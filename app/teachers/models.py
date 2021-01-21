@@ -1,5 +1,5 @@
 from django.db import models
-from students.models import Student
+from django.contrib.auth.models import User
 
 
 class Teacher(models.Model):
@@ -13,8 +13,9 @@ class Teacher(models.Model):
 
 class Class(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    url_video_call = models.CharField(max_length=2000)
     student = models.ForeignKey(
-        Student, editable=False, null=True, on_delete=models.SET_NULL
+        User, editable=False, null=True, on_delete=models.SET_NULL
     )
     topic = models.CharField(max_length=30)
     start = models.TimeField()
