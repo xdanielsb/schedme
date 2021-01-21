@@ -222,7 +222,18 @@
             {
               title: "Free time",
               start: "{{t.get_start}}",
-              end: "{{t.get_end}}"
+              end: "{{t.get_end}}",
+              backgroundColor: "#F6BF45"
+            },
+            {% endfor %}
+        {% endif %}
+        {% if activities %}
+            {% for t in activities %}
+            {
+              title: "Your calendar",
+              start: "{{t.get_start}}",
+              end: "{{t.get_end}}",
+              backgroundColor: "#1967D2"
             },
             {% endfor %}
         {% endif %}
