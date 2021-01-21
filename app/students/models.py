@@ -26,6 +26,7 @@ class Activity(models.Model):
     end = models.DateTimeField()
     isLocal = models.BooleanField(default=True) # true when the activity is scheduled by our software
     google_id = models.IntegerField()
+    title = models.TextField()
 
     def __str__(self):
         return "{} - {} - {}".format(
