@@ -39,6 +39,12 @@ class Activity(models.Model):
     def get_end(self):
         return self.end.strftime("%m/%d/%Y %H:%M %p")
 
+class CalendarCredentials(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    credentials = models.BinaryField()
+
+    def __str__(self) -> str:
+        return self.student
 
 class Hobbie(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)

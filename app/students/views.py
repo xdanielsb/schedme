@@ -1,10 +1,11 @@
 import datetime
 from django.shortcuts import render, redirect
 from teachers.models import Teacher
-from students.models import Hobbie, FreeTime
+from students.models import Hobbie, FreeTime, CalendarCredentials
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from common.calendar import getCreds, get_events
+from common.calendar import get_creds,get_events, filter_creds
+import pickle
 
 def landing(request):
     context = {}
@@ -34,8 +35,10 @@ def load_calendar(request):
     context = {}
     # here call method load calendar
     # print(request.user)  # current user
-    # TODO use creds from current user if authenticated
-    creds = getCreds()
+    creds = CalendarCredentials.objects.filter(student=request.user)
+    creds = pickle.loads(creds[0].credentials) if creds else None
+    creds = filter_creds(creds)
+    CalendarCredentials.objects.update_or_create(student=request.user,defaults={'credentials': pickle.dumps(creds)})
     events = get_events(creds)
     print(events)
     return render(request, "students/calendar.html", context)
