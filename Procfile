@@ -1,2 +1,2 @@
 web: gunicorn app.wsgi --chdir ./app --log-file -
-postdeploy: ./manage.py createsuperuser --no-input
+postdeploy: python ./manage.py createsuperuser --no-input
