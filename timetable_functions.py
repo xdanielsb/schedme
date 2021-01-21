@@ -10,8 +10,8 @@ student_names = ["Paul","Jessy","Harry","Joy","Fatima","Mickael","Lucy"]
 def parse_datetime(date_string, time_string): # format attendu: "DD/MM/YYYY HH:MM"
     return datetime.datetime.strptime(date_string+" "+time_string, "%d/%m/%Y %H:%M")
 
-def generate_proposal(activity, beginning, end):
-    return {"activity":activity, "beginning":beginning, "end":end}
+def generate_proposal(activity, beginning, end, number_of_slots):
+    return {"activity":activity, "beginning":beginning, "end":end, "number_of_slots":number_of_slots}
 
 def generate_random_proposals(number):
     retured_list = []
@@ -20,7 +20,8 @@ def generate_random_proposals(number):
         beginning_time = randint(8,17)
         beginning = datetime.datetime(2021,1,19,beginning_time)
         end = beginning+datetime.timedelta(hours=2)
-        proposal = generate_proposal(activity, beginning, end)
+        number_of_slots = randint(5,10)
+        proposal = generate_proposal(activity, beginning, end, number_of_slots)
         retured_list.append(proposal)
     return retured_list
 
@@ -121,11 +122,11 @@ teacher_beginning_time = datetime.datetime(2021,1,19,8)
 teacher_ending_time = student_beginning_time+datetime.timedelta(hours=3)
 
 student_slot = {"beginning":student_beginning_time, "end":student_ending_time}
-teacher_proposal = {"activity":"tennis", "beginning":teacher_beginning_time, "end":teacher_ending_time}
+teacher_proposal = {"activity":"tennis", "beginning":teacher_beginning_time, "end":teacher_ending_time, "slots":2}
 student=generate_student(2,"Pete",["golf"],[student_slot])
 
 teacher_list = generate_random_teachers(5)
-student_list = generate_random_students(5)
+student_list = generate_random_students(30)
 
 print("TEACHER LIST\n\n",teacher_list)
 
@@ -139,15 +140,15 @@ def match(teachers,students):
     match_list = []
     for teacher in teachers:
         for proposal in teacher["proposals"]:
-            already_attributed=False
+            proposal_slots = proposal["number_of_slots"]
             if students != []:
                 for student in students:
-                    if proposal["activity"] in student["likings"] and not already_attributed:
+                    if proposal["activity"] in student["likings"] and proposal_slots > 0:
                         for slot in student["slots"]:
                             if is_free_time(proposal,slot):
-                                match_list.append((teacher["id"],proposal,student["id"],slot))
+                                match_list.append((teacher["id"],student["id"],proposal))
                                 student["slots"].remove(slot)
-                                already_attributed=True
+                                proposal_slots -= 1
     return match_list
 
 matches = match(teacher_list,student_list)
@@ -157,11 +158,3 @@ def print_match_list(match_list):
         print(str(match)+"\n")
 
 print_match_list(matches)
-
-
-
-
-# print(is_free_student(teacher_proposal,student))
-
-
-# def match_teachers_students(teacher_list,student_list):
