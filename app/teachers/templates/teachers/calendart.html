@@ -128,6 +128,8 @@
 
   <div class="container">
 
+
+
 	<div class="row">
         <div class="profile-header-container"> 
           <div class="text-center">
@@ -135,7 +137,7 @@
                 <img class="img-circle" src="https://picsum.photos/100/100" />
                 <!-- badge -->
                 <div class="rank-label-container">
-                  <span class="label label-default rank-label">{{teacher.name}} {{teacher.last_name}}</span>
+                  <span class="label label-default rank-label">{{teacher.name}} {{teacher.last_name}} <br> {{teacher.email}}</span>
                 </div>
             </div>
         </div> 
@@ -193,20 +195,11 @@
           },
 
           events: [
-        {% if free_times %}
-            {% for t in free_times %}
-            {
-              title: "Free time",
-              start: "{{t.get_start}}",
-              end: "{{t.get_end}}",
-              backgroundColor: "#F6BF45"
-            },
-            {% endfor %}
-        {% endif %}
+
         {% if classes %}
             {% for t in classes %}
             {
-              title: "{{t.name}}",
+              title: "{{t.topic}}",
               start: "{{t.get_start}}",
               end: "{{t.get_end}}",
               backgroundColor: "#1967D2"
@@ -223,22 +216,7 @@
           editable: true,
           eventLimit: true, // allow "more" link when too many events
 
-          select: function(start, end) {
-            // Display the modal.
-            // You could fill in the start and end fields based on the parameters
-            $(".modal").modal("show");
-            $(".modal").
-            find("#title").
-            val("");
-            $(".modal").
-            find("#starts-at").
-            val("");
-            $(".modal").
-            find("#ends-at").
-            val("");
-            $("#save-event").show();
-            $("input").prop("readonly", false);
-          },
+
 
           eventRender: function(event, element) {
             //dynamically prepend close button to event
@@ -271,41 +249,6 @@
 
         // Bind the dates to datetimepicker.
         $("#starts-at, #ends-at").datetimepicker();
-
-        //click to save "save"
-        $("#save-event").on("click", function(event) {
-          var title = "Free time";
-          if (title) {
-            var eventData = {
-              title: "Free time",
-              start: $("#starts-at").val(),
-              end: $("#ends-at").val()
-            };
-
-            $.ajax({
-              type: 'GET',
-              url: "{% url 'students:save_event' %}",
-              data: eventData,
-              success: function (response) {
-                  console.log(response);
-              },
-              error: function (response) {
-                  console.log(response);
-              }
-           })
-
-
-            $("#calendar").fullCalendar("renderEvent", eventData, true); // stick? = true
-          }
-          $("#calendar").fullCalendar("unselect");
-
-          // Clear modal inputs
-          $(".modal").
-          find("input").
-          val("");
-          // hide modal
-          $(".modal").modal("hide");
-        });
 
         // $("textarea").autosize();
       });
