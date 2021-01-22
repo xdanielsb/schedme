@@ -8,9 +8,7 @@ class FreeTime(models.Model):
     end = models.DateTimeField()
 
     def __str__(self):
-        return "{} - {} - {}".format(
-            self.start, self.end, self.student
-        )
+        return "{} - {} - {}".format(self.start, self.end, self.student)
 
     @property
     def get_start(self):
@@ -19,20 +17,21 @@ class FreeTime(models.Model):
     @property
     def get_end(self):
         return self.end.strftime("%m/%d/%Y %H:%M %p")
+
 
 class Activity(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     start = models.DateTimeField()
     end = models.DateTimeField()
-    isLocal = models.BooleanField(default=True) # true when the activity is scheduled by our software
+    isLocal = models.BooleanField(
+        default=True
+    )  # true when the activity is scheduled by our software
     google_id = models.TextField(null=True)
     title = models.TextField(null=True)
 
     def __str__(self):
-        return "{} - {} - {}".format(
-            self.start, self.end, self.student
-        )
-    
+        return "{} - {} - {}".format(self.start, self.end, self.student)
+
     @property
     def get_start(self):
         return self.start.strftime("%m/%d/%Y %H:%M %p")
@@ -40,6 +39,7 @@ class Activity(models.Model):
     @property
     def get_end(self):
         return self.end.strftime("%m/%d/%Y %H:%M %p")
+
 
 class CalendarCredentials(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -47,6 +47,7 @@ class CalendarCredentials(models.Model):
 
     def __str__(self):
         return "{}".format(self.student)
+
 
 class Hobbie(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -1,11 +1,12 @@
 import datetime
 from django.shortcuts import render, redirect
-from teachers.models import Teacher
+from teachers.models import Teacher, Class
 from students.models import Hobbie, FreeTime, CalendarCredentials, Activity
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from common.calendar import get_creds, get_events, filter_creds
+from common.calendar import get_events, filter_creds
 import pickle
+from common.timetable_functions import generate_random_teachers
 
 
 def landing(request):
@@ -77,6 +78,22 @@ def generate_plan(request):
     # generate events to the students
     students = User.objects.all()
     teachers = Teacher.objects.all()
+    if len(teachers) <= 5:
+        for row in generate_random_teachers(10):
+            t = Teacher(
+                name=row["name"], email=row["email"], last_name=row["last_name"]
+            )
+            t.save()
+            for p in row["proposals"]:
+                nclass = Class(
+                    teacher=t,
+                    topic=p["topic"],
+                    start=p["start"],
+                    end=p["end"],
+                    slots=p["number_of_slots"],
+                )
+                nclass.save()
+
     # current students and teachers
     # print(students)
     # print(teachers)
