@@ -13,7 +13,7 @@ def get_creds():
     # TODO change that with server data
     #flow = InstalledAppFlow.from_client_secrets_file("code_secret_client.json", SCOPES)
     print(os.environ['CLIENT_CONFIG'])
-    flow = InstalledAppFlow.from_client_config(os.environ['CLIENT_CONFIG'])
+    flow = InstalledAppFlow.from_client_config(os.environ['CLIENT_CONFIG'],SCOPES)
     creds = flow.run_local_server(port=8080)
     return creds
 
