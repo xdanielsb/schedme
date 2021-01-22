@@ -184,7 +184,7 @@ def generate_plan(request):
         for activity in activities:
             # available classes at that time with that topic for that user
             ans = Class.objects.filter(
-                start__gte=free_time.start, end__leq=free_time.end
+                start=free_time.start, end=free_time.end
             )
             if len(ans) > 0:
                 possible_classe.append(ans[0])
