@@ -1,10 +1,13 @@
 *.swp
 env-django/
 __pycache__/
+.vscode
+env/
+local
+code_secret_client*
 .env
 .env.swo
 .vscode/
 env/
 local/
-code_secret_client*
 app/db.sqlite3

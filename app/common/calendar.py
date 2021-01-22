@@ -1,15 +1,18 @@
 from __future__ import print_function
 import datetime
+from logging import error
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google_auth_oauthlib.flow import InstalledAppFlow, Flow
 from google.auth.transport.requests import Request
+import os
+from django.http import HttpResponseRedirect
+import json
 
 # If modifying these scopes, reset the token
 SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
 
 
 def get_creds():
-    # TODO change that with server data
     flow = InstalledAppFlow.from_client_secrets_file("code_secret_client.json", SCOPES)
     creds = flow.run_local_server(port=8080)
     return creds
@@ -18,7 +21,11 @@ def get_creds():
 def filter_creds(creds):
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
+            try:
+                creds.refresh(Request())
+            except:
+                print("here i am")
+                creds = get_creds()
         else:
             creds = get_creds()
     return creds
