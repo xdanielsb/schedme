@@ -231,6 +231,17 @@
             },
             {% endfor %}
         {% endif %}
+
+        {% if classes %}
+            {% for t in classes %}
+            {
+              title: "{{t.topic}}",
+              start: "{{t.get_start}}",
+              end: "{{t.get_end}}",
+              backgroundColor: "#52B67A"
+            },
+            {% endfor %}
+        {% endif %}
           ],
 
 

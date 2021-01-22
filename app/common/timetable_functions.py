@@ -23,7 +23,7 @@ def generate_random_proposals(number):
     for i in range(number):
         topic = choice(activities)
         start_time = randint(8, 17)
-        start = datetime.datetime(2021, 1, 19, start_time)
+        start = datetime.datetime(2021, 1, randint(1, 30), start_time)
         end = start + datetime.timedelta(hours=2)
         number_of_slots = randint(5, 10)
         proposal = generate_proposal(topic, start, end, number_of_slots)
@@ -38,7 +38,7 @@ def generate_random_teacher(id):
     name = choice(teacher_names)
     last_name = choice(last_names)
     email = name.lower()+"."+last_name.lower() + "@scheduled.me"
-    proposals = generate_random_proposals(3)
+    proposals = generate_random_proposals(10)
     return {
         "id": dict_id,
         "name": name,

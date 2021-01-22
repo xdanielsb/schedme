@@ -80,6 +80,10 @@ def load_calendar(request):
         Activity.objects.update_or_create(
             student=request.user, google_id=event["id"], defaults=default_value
         )
+        messages.info(
+            request,
+            "The events in your calendar was successfully lodaded.",
+        )
     return redirect("students:index")
 
 
@@ -102,7 +106,6 @@ def generate_plan(request):
     context = {}
     # here call method to generate possible plan and
     # generate events to the students
-    students = User.objects.all()
     teachers = Teacher.objects.all()
     if len(teachers) <= 5:
         for row in generate_random_teachers(10):
@@ -120,8 +123,32 @@ def generate_plan(request):
                 )
                 nclass.save()
 
-    # current students and teachers
-    # print(students)
-    # print(teachers)
-    # call function to generate schedules
+    free_times = FreeTime.objects.filter(student=request.user)
+    activities = Activity.objects.filter(student=request.user)
+
+    possible_classe = []
+    for free_time in free_times:
+        for activity in activities:
+            # available classes at that time with that topic for that user
+            ans = Class.objects.filter(
+                start__gte=free_time.start, end__leq=free_time.end
+            )
+            if len(ans) > 0:
+                possible_classe.append(ans[0])
+                break
+
+    if len(possible_classe) == 0:
+        messages.info(
+            request,
+            "There are not available classes that match your free times & hobbies, go to Teachers, we propose you some random classes",
+        )
+        possible_classe = random.sample(list(Class.objects.all()), 3)
+    context["classes"] = possible_classe
+
+    hobbies_user = Hobbie.objects.filter(student=request.user)
+    hobbies = ", ".join([h.name for h in hobbies_user])
+    context["hobbies"] = hobbies
+    context["free_times"] = free_times
+    context["activities"] = activities
+
     return render(request, "students/calendar.html", context)
