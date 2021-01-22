@@ -1,0 +1,23 @@
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link pr-3" href="/"> <span class="material-icons">home</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/students/">Calendar<span class="sr-only">(current)</span></a>
+      </li>
+       <li class="nav-item">
+        <a class="nav-link" href="/teachers/">Teachers</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      {% if user.is_authenticated %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{ user.username }}</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/students/logout">Logout</a>
+        </div>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>

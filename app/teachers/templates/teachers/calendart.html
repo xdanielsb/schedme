@@ -128,41 +128,25 @@
 
   <div class="container">
 
-    {% if messages %}
-<ul class="messages">
-    {% for msg in messages %}       
-    <li>
-        <div class="alert alert-{{msg.level_tag}}" role="alert">
-        {{msg.message}}
+
+
+	<div class="row">
+        <div class="profile-header-container"> 
+          <div class="text-center">
+    		<div class="profile-header-img">
+                <img class="img-circle" src="https://picsum.photos/100/100" />
+                <!-- badge -->
+                <div class="rank-label-container">
+                  <span class="label label-default rank-label">{{teacher.name}} {{teacher.last_name}} <br> {{teacher.email}}</span>
+                </div>
+            </div>
+        </div> 
         </div>
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
+	</div>
+  <br><br>
 
-    <h3 class="border-bottom-0 mt-3"> 1. Tell us your hobbies </h3>
-
-    <form action="save_hobbies" class="mb-3" method="POST">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="exampleFormControlTextarea1">Write your hobbies</label>
-        <textarea name="hobbies" class="form-control" id="exampleFormControlTextarea1" rows="5" placeholder="piano, dancing, eat, talk">{% if hobbies %}{{hobbies}}{% endif %}</textarea>
-      </div>
-      <input type="submit" value="save" style="width:60px">
-    </form>
-
-
-    <h3 class="border-bottom-0"> 2. Choose your disponibility </h3>
-    <h4 class="border-bottom-0"> <i> (you can load your google calendar <a class="btn btn-info" href="load_calendar"> load calendar </a>)</i></h4>
     <div id='calendar'></div>
 
-
-
-
-    <h3 class="border-bottom-0 mt-3"> 3. Generate your plan <a class="btn btn-primary  btn-lg" href="generate_calendar"> Click </a> </h3>
-
-    <h3 class="border-bottom-0 mt-3"> 4. Join the class </h3>
-    <br><br><br>
 
     <div class="mb-3"></div>
 
@@ -211,26 +195,6 @@
           },
 
           events: [
-        {% if free_times %}
-            {% for t in free_times %}
-            {
-              title: "Free time",
-              start: "{{t.get_start}}",
-              end: "{{t.get_end}}",
-              backgroundColor: "#F6BF45"
-            },
-            {% endfor %}
-        {% endif %}
-        {% if activities %}
-            {% for t in activities %}
-            {
-              title: "Your calendar",
-              start: "{{t.get_start}}",
-              end: "{{t.get_end}}",
-              backgroundColor: "#1967D2"
-            },
-            {% endfor %}
-        {% endif %}
 
         {% if classes %}
             {% for t in classes %}
@@ -238,7 +202,7 @@
               title: "{{t.topic}}",
               start: "{{t.get_start}}",
               end: "{{t.get_end}}",
-              backgroundColor: "#52B67A"
+              backgroundColor: "#1967D2"
             },
             {% endfor %}
         {% endif %}
@@ -252,22 +216,7 @@
           editable: true,
           eventLimit: true, // allow "more" link when too many events
 
-          select: function(start, end) {
-            // Display the modal.
-            // You could fill in the start and end fields based on the parameters
-            $(".modal").modal("show");
-            $(".modal").
-            find("#title").
-            val("");
-            $(".modal").
-            find("#starts-at").
-            val("");
-            $(".modal").
-            find("#ends-at").
-            val("");
-            $("#save-event").show();
-            $("input").prop("readonly", false);
-          },
+
 
           eventRender: function(event, element) {
             //dynamically prepend close button to event
@@ -300,41 +249,6 @@
 
         // Bind the dates to datetimepicker.
         $("#starts-at, #ends-at").datetimepicker();
-
-        //click to save "save"
-        $("#save-event").on("click", function(event) {
-          var title = "Free time";
-          if (title) {
-            var eventData = {
-              title: "Free time",
-              start: $("#starts-at").val(),
-              end: $("#ends-at").val()
-            };
-
-            $.ajax({
-              type: 'GET',
-              url: "{% url 'students:save_event' %}",
-              data: eventData,
-              success: function (response) {
-                  console.log(response);
-              },
-              error: function (response) {
-                  console.log(response);
-              }
-           })
-
-
-            $("#calendar").fullCalendar("renderEvent", eventData, true); // stick? = true
-          }
-          $("#calendar").fullCalendar("unselect");
-
-          // Clear modal inputs
-          $(".modal").
-          find("input").
-          val("");
-          // hide modal
-          $(".modal").modal("hide");
-        });
 
         // $("textarea").autosize();
       });

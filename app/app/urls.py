@@ -19,8 +19,9 @@ from django.views.generic import TemplateView
 
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name="social_app/landing.html")),
+    path("", TemplateView.as_view(template_name="social_app/landing.html")),
     path("students/", include("students.urls", namespace="students")),
+    path("teachers/", include("teachers.urls", namespace="teachers")),
     path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
 ]
