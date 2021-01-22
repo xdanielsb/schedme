@@ -4,12 +4,18 @@ An application who reconnect us with our hobbies or at least for that it was des
 
 to see the application running click on the following link [DEMO](https://www.youtube.com/watch?v=dQw4w9WgXcQ)).
 
+after looking that DEMO you can see the deployment on scalingo here [deployment on scalingo](https://schedme.osc-fr1.scalingo.io/)
+
 ## Local installation
+
+Clone the repo in the folder schedme/ run the following commands
 
 ```sh
  $ python3 -m venv env-django
  $ source env-django/bin/activate
  (env-django)$ pip3 install -r requirements.txt
+ (env-django)$ cd app/
+ (env-django)$ python manage.py runserver
 ```
 
 ## Google Authentication
