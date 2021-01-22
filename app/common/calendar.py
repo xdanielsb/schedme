@@ -1,5 +1,6 @@
 from __future__ import print_function
 import datetime
+from logging import error
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -21,7 +22,10 @@ def get_creds():
 def filter_creds(creds):
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
+            try:
+                creds.refresh(Request())
+            except error:
+                creds = get_creds()
         else:
             creds = get_creds()
     return creds
