@@ -75,7 +75,7 @@ def load_calendar(request):
             except:
                 try:
                     flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
-                    flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/student/callback/'
+                    flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/students/callback/'
                     authorization_url, state = flow.authorization_url(access_type='offline',include_granted_scopes='true')
                     return redirect(authorization_url)
                 except:
@@ -84,7 +84,7 @@ def load_calendar(request):
         else:
             try:
                 flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
-                flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/student/callback/'
+                flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/students/callback/'
                 authorization_url, state = flow.authorization_url(access_type='offline',include_granted_scopes='true')
                 return redirect(authorization_url)
             except:
@@ -114,7 +114,7 @@ def load_calendar(request):
 
 def callback(request):
     flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
-    flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/student/callback/'
+    flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/students/callback/'
     authorization_response = request.url
     flow.fetch_token(authorization_response=authorization_response)
     creds = flow.credentials
