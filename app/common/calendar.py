@@ -5,6 +5,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import os
+import json
 
 # If modifying these scopes, reset the token
 SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
@@ -14,7 +15,7 @@ def get_creds():
     # TODO change that with server data
     try:
         print(os.environ['CLIENT_CONFIG'])
-        flow = InstalledAppFlow.from_client_config(os.environ['CLIENT_CONFIG'],SCOPES)
+        flow = InstalledAppFlow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
     except:
         flow = InstalledAppFlow.from_client_secrets_file("code_secret_client.json", SCOPES)
     creds = flow.run_local_server(port=8080)

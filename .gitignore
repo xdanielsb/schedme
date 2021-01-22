@@ -10,5 +10,4 @@ code_secret_client*
 .vscode/
 env/
 local/
-code_secret_client*
 app/db.sqlite3
