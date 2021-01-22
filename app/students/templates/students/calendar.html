@@ -235,7 +235,7 @@
         {% if classes %}
             {% for t in classes %}
             {
-              title: "{{t.topic}}",
+              title: "{{t.topic}} with {{t.teacher.name}}",
               start: "{{t.get_start}}",
               end: "{{t.get_end}}",
               backgroundColor: "#52B67A"

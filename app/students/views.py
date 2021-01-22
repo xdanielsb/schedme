@@ -23,11 +23,13 @@ def index(request):
     hobbies_user = Hobbie.objects.filter(student=request.user)
     free_times = FreeTime.objects.filter(student=request.user)
     activities = Activity.objects.filter(student=request.user)
+    classes = Class.objects.filter(student=request.user)
 
     hobbies = ", ".join([h.name for h in hobbies_user])
     context["hobbies"] = hobbies
     context["free_times"] = free_times
     context["activities"] = activities
+    context["classes"] = classes
     return render(request, "students/calendar.html", context)
 
 
@@ -124,31 +126,37 @@ def generate_plan(request):
                 nclass.save()
 
     free_times = FreeTime.objects.filter(student=request.user)
+    hobbies_user = Hobbie.objects.filter(student=request.user)
+    str_hobbies = [x.name for x in hobbies_user]
     activities = Activity.objects.filter(student=request.user)
-
     possible_classe = []
     for free_time in free_times:
-        for activity in activities:
-            # available classes at that time with that topic for that user
-            ans = Class.objects.filter(
-                start__gte=free_time.start, end__leq=free_time.end
-            )
-            if len(ans) > 0:
-                possible_classe.append(ans[0])
-                break
+        # available classes at that time with that topic for that user
+        ans = Class.objects.filter(start__gte=free_time.start, end__lte=free_time.end)
+        for a in ans:
+            if a.topic in str_hobbies:
+                possible_classe.append(a)
 
     if len(possible_classe) == 0:
         messages.info(
             request,
-            "There are not available classes that match your free times & hobbies, go to Teachers, we propose you some random classes",
+            "There are not available classes that match your availability & hobbies.",
+        )
+        messages.info(
+            request,
+            "But we propose some interesting ideas, you can change them.",
         )
         possible_classe = random.sample(list(Class.objects.all()), 3)
-    context["classes"] = possible_classe
 
-    hobbies_user = Hobbie.objects.filter(student=request.user)
+    Class.objects.filter(student=request.user).delete()
+    for p in possible_classe:
+        p.student = request.user
+        p.save()
+
     hobbies = ", ".join([h.name for h in hobbies_user])
     context["hobbies"] = hobbies
     context["free_times"] = free_times
     context["activities"] = activities
+    context["classes"] = possible_classe
 
-    return render(request, "students/calendar.html", context)
+    return redirect("students:index")
