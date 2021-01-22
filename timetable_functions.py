@@ -1,7 +1,9 @@
 # activités proposées: piano, guitare, tennis (for example)
 
 from random import choice, randint, choices
+from copy import copy
 import datetime
+from itertools import permutations
 
 activities = ["piano","guitar","tennis"]
 teacher_names = ["John","Maria","Peter","Martin","Rick"]
@@ -29,7 +31,8 @@ def generate_random_teacher(id):
     dict_id = "p"+str(id)
     name = choice(teacher_names)
     proposals = generate_random_proposals(3)
-    return {"id":dict_id, "name":name, "proposals":proposals}
+    time_zone = datetime.timedelta(hours=1)
+    return {"id":dict_id, "name":name, "timezone":time_zone, "proposals":proposals}
 
 def generate_random_teachers(number):
     teacher_list = []
@@ -58,14 +61,15 @@ def generate_random_slots(number):
         retured_list.append(slot)
     return retured_list
 
-def generate_student(id, name, likings, slots):
-    return {"id":"s"+str(id), "name": name, "likings":likings, "slots":slots}
+def generate_student(id, name, time_zone, likings, slots):
+    return {"id":"s"+str(id), "name": name, "timezone": time_zone, "likings":likings, "slots":slots}
 
 def generate_random_student(id):
     dict_id = "s"+str(id)
     name = choice(student_names)
+    time_zone = datetime.timedelta(hours=1)
     likings = choices(activities, k=2)
-    return {"id":dict_id, "name":name, "likings":likings, "slots":generate_random_slots(2)}
+    return {"id":dict_id, "name":name, "timezone":time_zone, "likings":likings, "slots":generate_random_slots(2)}
 
 def generate_random_students(number):
     student_list = []
@@ -108,7 +112,7 @@ def proposals_to_string(proposals):
     return total_string
 
 def print_teacher(teacher):
-    print("name: "+teacher["name"]+"\nproposals: "+proposals_to_string(teacher["proposals"]))
+    print("name: "+teacher["name"]+"\ntimezone:"+str(teacher["timezone"])+"\nproposals: "+proposals_to_string(teacher["proposals"]))
 
 def print_teacher_list(teacher_list):
     for teacher in teacher_list:
@@ -125,11 +129,12 @@ teacher_beginning_time_2 = datetime.datetime(2021,1,19,10)
 teacher_ending_time_2 = teacher_beginning_time_2+datetime.timedelta(hours=1)
 
 student_slot = {"beginning":student_beginning_time, "end":student_ending_time}
-teacher_proposal_1 = {"activity":"tennis", "beginning":teacher_beginning_time_1, "end":teacher_ending_time_1, "number_of_slots":2}
-teacher_proposal_2 = {"activity":"tennis", "beginning":teacher_beginning_time_2, "end":teacher_ending_time_2, "number_of_slots":2}
+teacher_proposal_1 = {"activity":"tennis", "beginning":teacher_beginning_time_1, "end":teacher_ending_time_1, "number_of_slots":1}
+teacher_proposal_2 = {"activity":"tennis", "beginning":teacher_beginning_time_2, "end":teacher_ending_time_2, "number_of_slots":1}
 teacher_proposals = [teacher_proposal_1,teacher_proposal_2]
-teacher = {"id":"p2", "name":"Jane", "proposals":teacher_proposals}
-student=generate_student(2,"Pete",["tennis"],[student_slot])
+teacher = {"id":"p2", "name":"Jane", "timezone": datetime.timedelta(hours=1), "proposals":teacher_proposals}
+student=generate_student(2,"Pete",datetime.timedelta(hours=1),["tennis"],[student_slot])
+student2=generate_student(3,"Jack",datetime.timedelta(hours=1),["tennis"],[student_slot])
 
 teacher_list = generate_random_teachers(5)
 student_list = generate_random_students(30)
@@ -140,23 +145,28 @@ print_teacher_list(teacher_list)
 def match(teachers,students):
     match_list = []
     for teacher in teachers:
-        for proposal in teacher["proposals"]:
-            proposal_slots = proposal["number_of_slots"]
-            if students != []:
-                for student in students:
-                    if proposal["activity"] in student["likings"] and proposal_slots > 0:
-                        for slot in student["slots"]:
-                            if is_free_time(proposal,slot):
-                                match_list.append((teacher["id"],student["id"],proposal))
-                                student["slots"].remove(slot)
-                                if slot["beginning"] < proposal["beginning"]:
-                                    student["slots"].append({"beginning":slot["beginning"], "end":proposal["beginning"]})
-                                if slot["end"] > proposal["end"]:
-                                    student["slots"].append({"beginning":proposal["end"], "end":slot["end"]})
-                                proposal_slots -= 1
+        students_copy = copy(students)
+        while students_copy != []:
+            n = randint(0,len(students_copy)-1)
+            student = students_copy[n]
+            students_copy.remove(student)
+            likings_copy = copy(student["likings"])
+            for proposal in teacher["proposals"]:
+                proposal_slots = proposal["number_of_slots"]
+                if proposal["activity"] in likings_copy and proposal_slots > 0:
+                    for slot in student["slots"]:
+                        if is_free_time(proposal,slot):
+                            match_list.append((teacher["id"],student["id"],proposal))
+                            student["slots"].remove(slot)
+                            likings_copy.remove(proposal["activity"])
+                            if slot["beginning"] < proposal["beginning"]:
+                                student["slots"].append({"beginning":slot["beginning"], "end":proposal["beginning"]})
+                            if slot["end"] > proposal["end"]:
+                                student["slots"].append({"beginning":proposal["end"], "end":slot["end"]})
+                            proposal_slots -= 1
     return match_list
 
-matches_one_test = match([teacher],[student])
+matches_one_test = match([teacher],[student,student2])
 matches_test = match(teacher_list,student_list)
 
 def print_match_list(match_list):
