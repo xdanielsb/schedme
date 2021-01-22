@@ -98,7 +98,7 @@ def slots_to_string(slots):
     return total_string
 
 def print_student(student):
-    print("name: "+student["name"]+"\nlikings: "+str(student["likings"])+"\nslots: "+slots_to_string(student["slots"]))
+    print("name: "+student["name"]+"\ntimezone: " +str(student["timezone"])+"\nlikings: "+str(student["likings"])+"\nslots: "+slots_to_string(student["slots"]))
 
 def print_student_list(student_list):
     for student in student_list:
