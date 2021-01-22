@@ -5,13 +5,19 @@ from students.models import Hobbie, FreeTime, CalendarCredentials, Activity
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.http import HttpResponseRedirect
-from common.calendar import get_events, filter_creds
+from common.calendar import get_events, get_creds
 import pickle
 from common.timetable_functions import generate_random_teachers
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 import random
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow, Flow
+import json
+from google.auth.transport.requests import Request
+import os
 
+SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
 
 def landing(request):
     context = {}
@@ -60,10 +66,58 @@ def load_calendar(request):
     # here call method load calendar
     # print(request.user)  # current user
     # obtain calendar token
-
     creds = CalendarCredentials.objects.filter(student=request.user)
     creds = pickle.loads(creds[0].credentials) if creds else None
-    creds = filter_creds(creds)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            try:
+                creds.refresh(Request())
+            except:
+                try:
+                    flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
+                    flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/student/callback/'
+                    authorization_url, state = flow.authorization_url(access_type='offline',include_granted_scopes='true')
+                    return redirect(authorization_url)
+                except:
+                    # When running on localhost
+                    creds = get_creds()
+        else:
+            try:
+                flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
+                flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/student/callback/'
+                authorization_url, state = flow.authorization_url(access_type='offline',include_granted_scopes='true')
+                return redirect(authorization_url)
+            except:
+                # When running on localhost
+                creds = get_creds()
+        CalendarCredentials.objects.update_or_create(
+            student=request.user, defaults={"credentials": pickle.dumps(creds)}
+        )
+        # obtain google calendar data and store it in our database
+        events = get_events(creds)
+        for event in events:
+            default_value = {
+                "start": event["start"]["dateTime"],
+                "end": event["end"]["dateTime"],
+                "isLocal": False,
+            }
+            if "title" in event.keys():
+                default_value["title"] = event["title"]
+            Activity.objects.update_or_create(
+                student=request.user, google_id=event["id"], defaults=default_value
+            )
+            messages.info(
+                request,
+                "The events in your calendar was successfully lodaded.",
+            )
+        return redirect("students:index")
+
+def callback(request):
+    flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
+    flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/student/callback/'
+    authorization_response = request.url
+    flow.fetch_token(authorization_response=authorization_response)
+    creds = flow.credentials
     CalendarCredentials.objects.update_or_create(
         student=request.user, defaults={"credentials": pickle.dumps(creds)}
     )
@@ -85,7 +139,6 @@ def load_calendar(request):
             "The events in your calendar was successfully lodaded.",
         )
     return redirect("students:index")
-
 
 def save_event(request):
     start = request.GET.get("start", None)

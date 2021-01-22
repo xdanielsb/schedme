@@ -2,9 +2,10 @@ from __future__ import print_function
 import datetime
 from logging import error
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google_auth_oauthlib.flow import InstalledAppFlow, Flow
 from google.auth.transport.requests import Request
 import os
+from django.http import HttpResponseRedirect
 import json
 
 # If modifying these scopes, reset the token
@@ -12,12 +13,7 @@ SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
 
 
 def get_creds():
-    # TODO change that with server data
-    try:
-        print(os.environ['CLIENT_CONFIG'])
-        flow = InstalledAppFlow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
-    except:
-        flow = InstalledAppFlow.from_client_secrets_file("code_secret_client.json", SCOPES)
+    flow = InstalledAppFlow.from_client_secrets_file("code_secret_client.json", SCOPES)
     creds = flow.run_local_server(port=8080)
     return creds
 

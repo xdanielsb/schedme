@@ -12,4 +12,5 @@ urlpatterns = [
     path("generate_calendar", views.generate_plan, name="generate_calendar"),
     path("save_event", views.save_event, name="save_event"),
     path("logout", views.logouts),
+    path("callback", views.callback, name="callback")
 ]
