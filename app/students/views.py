@@ -115,7 +115,7 @@ def load_calendar(request):
 def callback(request):
     flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
     flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/students/callback'
-    authorization_response = request.url
+    authorization_response = request.build_absolute_uri('?')
     flow.fetch_token(authorization_response=authorization_response)
     creds = flow.credentials
     CalendarCredentials.objects.update_or_create(
