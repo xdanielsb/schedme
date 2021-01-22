@@ -90,27 +90,27 @@ def load_calendar(request):
             except:
                 # When running on localhost
                 creds = get_creds()
-        CalendarCredentials.objects.update_or_create(
-            student=request.user, defaults={"credentials": pickle.dumps(creds)}
+    CalendarCredentials.objects.update_or_create(
+        student=request.user, defaults={"credentials": pickle.dumps(creds)}
+    )
+    # obtain google calendar data and store it in our database
+    events = get_events(creds)
+    for event in events:
+        default_value = {
+            "start": event["start"]["dateTime"],
+            "end": event["end"]["dateTime"],
+            "isLocal": False,
+        }
+        if "title" in event.keys():
+            default_value["title"] = event["title"]
+        Activity.objects.update_or_create(
+            student=request.user, google_id=event["id"], defaults=default_value
         )
-        # obtain google calendar data and store it in our database
-        events = get_events(creds)
-        for event in events:
-            default_value = {
-                "start": event["start"]["dateTime"],
-                "end": event["end"]["dateTime"],
-                "isLocal": False,
-            }
-            if "title" in event.keys():
-                default_value["title"] = event["title"]
-            Activity.objects.update_or_create(
-                student=request.user, google_id=event["id"], defaults=default_value
-            )
-            messages.info(
-                request,
-                "The events in your calendar was successfully lodaded.",
-            )
-        return redirect("students:index")
+        messages.info(
+            request,
+            "The events in your calendar was successfully lodaded.",
+        )
+    return redirect("students:index")
 
 def callback(request):
     flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
