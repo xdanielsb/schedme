@@ -18,9 +18,17 @@ class Class(models.Model):
         User, editable=False, null=True, on_delete=models.SET_NULL
     )
     topic = models.CharField(max_length=30)
-    start = models.TimeField()
-    end = models.TimeField()
-    day = models.DateField()
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    slots = models.IntegerField(default=1)
 
     def __str__(self):
         return "{}".format(self.topic)
+
+    @property
+    def get_start(self):
+        return self.start.strftime("%m/%d/%Y %H:%M %p")
+
+    @property
+    def get_end(self):
+        return self.end.strftime("%m/%d/%Y %H:%M %p")

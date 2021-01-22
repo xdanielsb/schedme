@@ -1,0 +1,26 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+  {% include "students/navbar.html" %}
+
+  <div class="container mt-3">
+    <div class="card-columns">
+      {% for teacher in teachers %}
+      <div class="card mr-2 ml-2" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{teacher.name}} - {{teacher.last_name}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Teacher</h6>
+          <p class="card-text"></p>
+          <a href="/teachers/{{teacher.pk}}" class="card-link">See my classes</a>
+          <!-- <a href="#" class="card-link">Another link</a> -->
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>

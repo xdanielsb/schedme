@@ -128,28 +128,22 @@
 
   <div class="container">
 
-    <h3 class="border-bottom-0 mt-3"> 1. Tell us your hobbies </h3>
+	<div class="row">
+        <div class="profile-header-container"> 
+          <div class="text-center">
+    		<div class="profile-header-img">
+                <img class="img-circle" src="https://picsum.photos/100/100" />
+                <!-- badge -->
+                <div class="rank-label-container">
+                  <span class="label label-default rank-label">{{teacher.name}} {{teacher.last_name}}</span>
+                </div>
+            </div>
+        </div> 
+        </div>
+	</div>
+  <br><br>
 
-    <form action="save_hobbies" class="mb-3" method="POST">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="exampleFormControlTextarea1">Write your hobbies</label>
-        <textarea name="hobbies" class="form-control" id="exampleFormControlTextarea1" rows="5" placeholder="piano, dancing, eat, talk">{% if hobbies %}{{hobbies}}{% endif %}</textarea>
-      </div>
-      <input type="submit" value="save" style="width:60px">
-    </form>
-
-
-    <h3 class="border-bottom-0"> 2. Choose your disponibility </h3>
-    <h4 class="border-bottom-0"> <i> (you can load your google calendar <a class="btn btn-info" href="load_calendar"> load calendar </a>)</i></h4>
     <div id='calendar'></div>
-
-
-
-
-    <h3 class="border-bottom-0 mt-3"> 3. Generate your plan <a class="btn btn-primary  btn-lg" href="generate_calendar"> Click </a> </h3>
-
-    <h3 class="border-bottom-0 mt-3"> 4. Join the class </h3>
 
 
     <div class="mb-3"></div>
@@ -209,10 +203,10 @@
             },
             {% endfor %}
         {% endif %}
-        {% if activities %}
-            {% for t in activities %}
+        {% if classes %}
+            {% for t in classes %}
             {
-              title: "Your calendar",
+              title: "{{t.name}}",
               start: "{{t.get_start}}",
               end: "{{t.get_end}}",
               backgroundColor: "#1967D2"
