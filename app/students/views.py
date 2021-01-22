@@ -4,9 +4,13 @@ from teachers.models import Teacher, Class
 from students.models import Hobbie, FreeTime, CalendarCredentials, Activity
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 from common.calendar import get_events, filter_creds
 import pickle
 from common.timetable_functions import generate_random_teachers
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+import random
 
 
 def landing(request):
@@ -27,6 +31,22 @@ def index(request):
     return render(request, "students/calendar.html", context)
 
 
+def guest(request):
+    context = {}
+    name = "guest{}".format(random.randint(1, 1000))
+    if len(User.objects.filter(username=name)) == 0:
+        user = User.objects.create_user(
+            username=name,
+            password="some-secret-password",
+            first_name=name,
+            last_name=" H.",
+        )
+        user.save()
+    user = authenticate(username=name, password="some-secret-password")
+    login(request, user)
+    return render(request, "students/calendar.html", context)
+
+
 def save_hobbies(request):
     hobbies = request.POST.get("hobbies")
     Hobbie.objects.filter(student=request.user).delete()
@@ -40,6 +60,7 @@ def load_calendar(request):
     # here call method load calendar
     # print(request.user)  # current user
     # obtain calendar token
+
     creds = CalendarCredentials.objects.filter(student=request.user)
     creds = pickle.loads(creds[0].credentials) if creds else None
     creds = filter_creds(creds)
@@ -70,6 +91,11 @@ def save_event(request):
     obj = FreeTime(student=request.user, start=start_obj, end=end_obj)
     obj.save()
     return JsonResponse({"ok": "true"}, status=200)
+
+
+def logouts(request):
+    logout(request)
+    return HttpResponseRedirect("/")
 
 
 def generate_plan(request):
