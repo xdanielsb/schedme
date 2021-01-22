@@ -87,7 +87,7 @@ def load_calendar(request):
             try:
                 flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
                 flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/students/callback'
-                authorization_url, state = flow.authorization_url(access_type='offline',include_granted_scopes='true')
+                authorization_url, state = flow.authorization_url(access_type='offline')
                 return redirect(authorization_url)
             except:
                 # When running on localhost
