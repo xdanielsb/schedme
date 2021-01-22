@@ -12,9 +12,11 @@ SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
 
 def get_creds():
     # TODO change that with server data
-    #flow = InstalledAppFlow.from_client_secrets_file("code_secret_client.json", SCOPES)
-    print(os.environ['CLIENT_CONFIG'])
-    flow = InstalledAppFlow.from_client_config(os.environ['CLIENT_CONFIG'],SCOPES)
+    try:
+        print(os.environ['CLIENT_CONFIG'])
+        flow = InstalledAppFlow.from_client_config(os.environ['CLIENT_CONFIG'],SCOPES)
+    except:
+        flow = InstalledAppFlow.from_client_secrets_file("code_secret_client.json", SCOPES)
     creds = flow.run_local_server(port=8080)
     return creds
 
@@ -24,7 +26,8 @@ def filter_creds(creds):
         if creds and creds.expired and creds.refresh_token:
             try:
                 creds.refresh(Request())
-            except error:
+            except:
+                print("here i am")
                 creds = get_creds()
         else:
             creds = get_creds()
