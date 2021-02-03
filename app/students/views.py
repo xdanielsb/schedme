@@ -19,6 +19,7 @@ import os
 
 SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
 
+
 def landing(request):
     context = {}
     return render(request, "students/landing.html", context)
@@ -76,18 +77,28 @@ def load_calendar(request):
                 creds.refresh(Request())
             except:
                 try:
-                    flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
-                    flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/students/callback'
-                    authorization_url, state = flow.authorization_url(access_type='offline')
+                    flow = Flow.from_client_config(
+                        json.loads(os.environ["CLIENT_CONFIG"]), SCOPES
+                    )
+                    flow.redirect_uri = (
+                        "https://schedme.osc-fr1.scalingo.io/students/callback"
+                    )
+                    authorization_url, state = flow.authorization_url(
+                        access_type="offline"
+                    )
                     return redirect(authorization_url)
                 except:
                     # When running on localhost
                     creds = get_creds()
         else:
             try:
-                flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
-                flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/students/callback'
-                authorization_url, state = flow.authorization_url(access_type='offline')
+                flow = Flow.from_client_config(
+                    json.loads(os.environ["CLIENT_CONFIG"]), SCOPES
+                )
+                flow.redirect_uri = (
+                    "https://schedme.osc-fr1.scalingo.io/students/callback"
+                )
+                authorization_url, state = flow.authorization_url(access_type="offline")
                 return redirect(authorization_url)
             except:
                 # When running on localhost
@@ -114,9 +125,10 @@ def load_calendar(request):
         )
     return redirect("students:index")
 
+
 def callback(request):
-    flow = Flow.from_client_config(json.loads(os.environ['CLIENT_CONFIG']),SCOPES)
-    flow.redirect_uri = 'https://schedme.osc-fr1.scalingo.io/students/callback'
+    flow = Flow.from_client_config(json.loads(os.environ["CLIENT_CONFIG"]), SCOPES)
+    flow.redirect_uri = "https://schedme.osc-fr1.scalingo.io/students/callback"
     authorization_response = request.build_absolute_uri()
     print("autho : ")
     print(authorization_response)
@@ -144,6 +156,7 @@ def callback(request):
         )
     return redirect("students:index")
 
+
 def save_event(request):
     start = request.GET.get("start", None)
     end = request.GET.get("end", None)
@@ -163,9 +176,22 @@ def generate_plan(request):
     context = {}
     # here call method to generate possible plan and
     # generate events to the students
-    teachers = Teacher.objects.all()
-    if len(teachers) <= 5:
-        for row in generate_random_teachers(10):
+
+    free_times = FreeTime.objects.filter(student=request.user)
+    hobbies_user = Hobbie.objects.filter(student=request.user)
+    str_hobbies = [x.name for x in hobbies_user]
+    activities = Activity.objects.filter(student=request.user)
+    possible_classe = []
+    for free_time in free_times:
+        # available classes at that time with that topic for that user
+        ans = Class.objects.filter(start__gte=free_time.start, end__lte=free_time.end)
+        for a in ans:
+            if a.topic in str_hobbies:
+                possible_classe.append(a)
+
+    if len(possible_classe) == 0:
+        Teacher.objects.all().delete()
+        for row in generate_random_teachers(30):
             t = Teacher(
                 name=row["name"], email=row["email"], last_name=row["last_name"]
             )
@@ -179,18 +205,6 @@ def generate_plan(request):
                     slots=p["number_of_slots"],
                 )
                 nclass.save()
-
-    free_times = FreeTime.objects.filter(student=request.user)
-    hobbies_user = Hobbie.objects.filter(student=request.user)
-    str_hobbies = [x.name for x in hobbies_user]
-    activities = Activity.objects.filter(student=request.user)
-    possible_classe = []
-    for free_time in free_times:
-        # available classes at that time with that topic for that user
-        ans = Class.objects.filter(start__gte=free_time.start, end__lte=free_time.end)
-        for a in ans:
-            if a.topic in str_hobbies:
-                possible_classe.append(a)
 
     if len(possible_classe) == 0:
         messages.info(

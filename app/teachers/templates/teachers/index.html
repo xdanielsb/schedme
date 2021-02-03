@@ -20,6 +20,7 @@
       {% for teacher in teachers %}
       <div class="card mr-2 ml-2" style="width: 18rem;">
         <div class="card-body">
+          <img class="rounded-circle" src="https://picsum.photos/id/{{ forloop.counter }}/100/100" />
           <h5 class="card-title">{{teacher.name}} - {{teacher.last_name}}</h5>
           <h6 class="card-subtitle mb-2 text-muted">Teacher</h6>
           <p class="card-text"></p>

@@ -4,7 +4,7 @@ An application who reconnect us with our hobbies or at least for that it was des
 
 to see the application running click on the following link [DEMO](https://www.youtube.com/watch?v=dQw4w9WgXcQ)).
 
-after looking that DEMO you can see the deployment on scalingo here [deployment on scalingo](https://schedme.osc-fr1.scalingo.io/)
+after looking that DEMO you can see the deployment on heroku here [deployment on heroku](https://schedme.herokuapp.com/)
 
 ## Local installation
 

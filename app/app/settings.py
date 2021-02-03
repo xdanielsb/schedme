@@ -32,7 +32,7 @@ try:
 except KeyError:
   pass
 
-ALLOWED_HOSTS = ["localhost"] + env_allowed_hosts
+ALLOWED_HOSTS = ["localhost", "schedme.herokuapp.com"] + env_allowed_hosts
 
 
 # Application definition

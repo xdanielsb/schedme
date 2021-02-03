@@ -2,6 +2,7 @@
 
 from random import choice, randint, choices
 import datetime
+from datetime import date
 
 
 def parse_datetime(date_string, time_string):  # format attendu: "DD/MM/YYYY HH:MM"
@@ -18,12 +19,22 @@ def generate_proposal(topic, start, end, number_of_slots):
 
 
 def generate_random_proposals(number):
-    activities = ["piano", "guitar", "tennis", "cooking", "singing", "pilates", "zumba", "art"]
+    activities = [
+        "piano",
+        "guitar",
+        "tennis",
+        "cooking",
+        "singing",
+        "pilates",
+        "zumba",
+        "art",
+    ]
     retured_list = []
+    today = date.today()
     for i in range(number):
         topic = choice(activities)
         start_time = randint(8, 17)
-        start = datetime.datetime(2021, 1, randint(22, 30), start_time)
+        start = datetime.datetime(today.year, today.month, randint(1, 27), start_time)
         end = start + datetime.timedelta(hours=2)
         number_of_slots = randint(5, 10)
         proposal = generate_proposal(topic, start, end, number_of_slots)
@@ -32,12 +43,26 @@ def generate_random_proposals(number):
 
 
 def generate_random_teacher(id):
-    teacher_names = ["John", "Maria", "Sophia", "Mia", "Peter", "Martin", "Rick", "Ada", "Claire", "Mark", "Daphne", "Daniel", "Dora"]
+    teacher_names = [
+        "John",
+        "Maria",
+        "Sophia",
+        "Mia",
+        "Peter",
+        "Martin",
+        "Rick",
+        "Ada",
+        "Claire",
+        "Mark",
+        "Daphne",
+        "Daniel",
+        "Dora",
+    ]
     last_names = ["Smith", "Biden", "Jones", "Miller", "Davis"]
     dict_id = "p" + str(id)
     name = choice(teacher_names)
     last_name = choice(last_names)
-    email = name.lower()+"."+last_name.lower() + "@scheduled.me"
+    email = name.lower() + "." + last_name.lower() + "@scheduled.me"
     proposals = generate_random_proposals(10)
     return {
         "id": dict_id,
